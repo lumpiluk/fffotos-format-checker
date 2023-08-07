@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FFFotochecker</title>
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+    <section>
+        <h1>FFFotochecker</h1>
+        <p>Heyhey!</p>
+        <p>
+            Nach einem Großstreik sortiert unsere FFFotoredaktion die besten Bilder aller Fotograf*innen (die bis dahin schon existieren) in einen oder mehrere Highlights-Ordner.
+            Dieser Highlights-Ordner sollte am Ende die folgenden Eigenschaften haben:
+        </p>
+        <ul>
+            <li>Er beinhaltet gute Bilder</li>
+            <li>Die Fotos können über ihre Dateinamen noch ihren Urheber*innen zugeordnet werden</li>
+            <li>Die Credits-/Lizenz-Wünsche der Fotograf*innen sind aus den Dateinamen ersichtlich</li>
+            <li>Die Fotos sind einigermaßen korrekt nach Aufnahmezeitpunkt sortiert</li>
+        </ul>
+        <p>
+            Mit diesem Tool wollen wir sichergehen, dass diese Eigenschaften im Highlights-Ordner erfüllt sind, ohne dass die FFFotoredaktion allzu viele Dateien von Hand umbenennen muss.
+        </p>
+    <section>
+    <div
+        id="drop_zone"
+        ondrop="dropHandler(event);"
+        ondragover="dragOverHandler(event);"
+        ondragenter="dragEnterHandler(event);"
+        ondragleave="dragLeaveHandler(event);"
+        ondragend="dragEndHandler(event);"
+    >
+        <p>Drag one or more files to this <i>drop zone</i>.</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/exifreader"></script>
+    <script>
+        let drop_zone = document.querySelector("#drop_zone");
+
+        function checkPhoto(file) {
+            console.log(`filename = ${file.name}`);
+
+            ExifReader.load(file).then(tags => {
+                console.log(tags);
+                console.log(tags['DateTimeOriginal'].description);
+            });
+        }
+
+        function dropHandler(ev) {
+            // Prevent default behavior (Prevent file from being opened)
+            ev.preventDefault();
+            drop_zone.classList.remove('over');
+
+            if (ev.dataTransfer.items) {
+                // Use DataTransferItemList interface to access the file(s)
+                [...ev.dataTransfer.items].forEach((item, i) => {
+                    console.log("DataTransferItemList");
+                    // If dropped items aren't files, reject them
+                    if (item.kind === "file") {
+                        const file = item.getAsFile();
+                        checkPhoto(file);
+                    }
+                });
+            } else {
+                // Use DataTransfer interface to access the file(s)
+                [...ev.dataTransfer.files].forEach((file, i) => {
+                    console.log("DataTransfer");
+                    checkPhoto(file);
+                });
+            }
+        }
+
+        function dragOverHandler(ev) {
+            // Prevent default behavior (Prevent file from being opened)
+            ev.preventDefault();
+            return false;
+        }
+
+        function dragEnterHandler(ev) {
+            drop_zone.classList.add('over');
+        }
+
+        function dragEndHandler(ev) {
+            drop_zone.classList.remove('over');
+        }
+
+        function dragLeaveHandler(ev) {
+            drop_zone.classList.remove('over');
+        }
+    </script>
+</body>
+</html>
