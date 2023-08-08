@@ -2,10 +2,11 @@
 <html>
 <head>
     <title>FFFotochecker</title>
-    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="https://indestructibletype.com/fonts/Jost.css" type="text/css" charset="utf-8" />
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <section>
+    <section id="sec-intro">
         <h1>FFFotochecker</h1>
         <p>Heyhey!</p>
         <p>
@@ -22,54 +23,64 @@
             Mit diesem Tool wollen wir sichergehen, dass diese Eigenschaften im Highlights-Ordner erfüllt sind, ohne dass die FFFotoredaktion allzu viele Dateien von Hand umbenennen muss.
         </p>
     <section>
-    <div id="drop_zone">
-        <p>
-            <label for="file_button">Ziehe ein Foto in dieses Feld oder nutze diesen Knopf:</label>
-            <input type="file" id="file_button" name="file_button" accept="image/jpeg" />
-        </p>
-    </div>
-    <section>
-        <table id="results-table">
-            <tr>
-                <th></th>
-                <th>Valide?</th>
-                <th>Wie finden wir das?</th>
-                <th>Erläuterungen</th>
-            </tr>
-            <tr id="results-datetimeoriginal">
-                <td>EXIF Metadaten: "DateTimeOriginal"</td>
-                <td>?</td>
-                <td>Wichtig</td>
-                <td>
-                    Um Bilder im Highlights-Ordner zuverlässig nach Uhrzeit sortieren zu können, wollen wir die Bilder in diesem Ordner so umbenennen, dass die Dateinamen mit dem Datum und der Uhrzeit anfangen, zu der das Foto aufgenommen wurde.
-                    Damit das funktioniert, muss beim Exportieren aus deinem Bildbearbeitungsprogramm das EXIF-Feld "DateTimeOriginal" mit-exportiert werden.
-                </td>
-            </tr>
-            <tr id="results-mimetype">
-                <td>JPEG</td>
-                <td>?</td>
-                <td>Relativ wichtig</td>
-                <td>Erfahrungsgemäß können alle mit JPEGs umgehen. Nextcloud unterstützt zwar auch Fotos im WEBP-Format, aber z.B. nicht das proprietäre HEIC, was manche Kameras (und iPhones?) schreiben. PNGs würden zu groß werden.</td>
-            </tr>
-            <tr id="results-resolution">
-                <td>Auflösung</td>
-                <td>?</td>
-                <td>?</td>
-                <td>Unsere FFF-Nextcloud-Instanz scheint so konfiguriert zu sein, dass Fotos im Browser und in der App keine Vorschau mehr bekommen, wenn die Höhe oder Breite in Pixeln einen bestimmten Wert überschreitet. Dieser Wert scheint aktuell bei 8192&nbsp;px (2<sup>13</sup>&nbsp;px) zu liegen.</td>
-            </tr>
-            <tr id="results-filesize">
-                <td>Dateigröße</td>
-                <td>?</td>
-                <td>?</td>
-                <td>Ähnlich wie für die Auflösung scheint die Cloud auch ein Limit in der Dateigröße zur Vorschaugenerierung zu haben. Dieses Limit scheint aktuell bei um die 50&nbsp;MiB zu liegen. In der Regel sollte die Dateigröße auch bei der maximalen Auflösung 15 oder 20&nbsp;MiB nicht übersteigen (Stand 2023…). Passe dafür ggf. beim Exportieren das JPEG-Kompressionslevel an – alles über 90&nbsp;% sollte ok sein.</td>
-            </tr>
-            <tr id="results-license">
-                <td>Lizenz im Dateinamen</td>
-                <td>?</td>
-                <td>Wichtig / kommt drauf an</td>
-                <td>Wenn im Dateinamen kein Lizenzkürzel steht (<span class="known-licenses"></span>), dafür aber dein Name, gehen wir davon aus, dass du namentlich genannt werden möchtest (äquivalent zu "BY").</td>
-            </tr>
-        </table>
+    <section id="sec-file-selection">
+        <div id="drop_zone">
+            <p>
+                Ziehe ein Foto in dieses Feld oder nutze diesen Knopf:
+                <label for="file_button" class="file_button">Browse…</label>
+                <input type="file" id="file_button" accept="image/jpeg" />
+            </p>
+        </div>
+    </section>
+    <section id="sec-results">
+        <div id="results-mimetype">
+            <div class="results-title">Dateiformat: JPEG</div>
+            <div class="results-validity">Valide: <span id="valid-mimetype">❓</span></div>
+            <div class="results-importance">Wie finden wir das: <span class="importance">Relativ wichtig</span></div>
+            <div class="results-description">
+                Erfahrungsgemäß können alle mit JPEGs umgehen.
+                Nextcloud unterstützt zwar auch Fotos im WEBP-Format, aber z.B. nicht das proprietäre HEIC, was manche Kameras (und iPhones?) schreiben.
+                PNGs würden zu groß werden.
+            </div>
+        </div>
+        <div id="results-datetimeoriginal">
+            <div class="results-title">EXIF Metadaten: "DateTimeOriginal"</div>
+            <div class="results-validity">Valide: <span id="valid-datetimeoriginal">❓</span></div>
+            <div class="results-importance">Wie finden wir das: <span class="importance">Wichtig</span></div>
+            <div class="results-description">
+                Um Bilder im Highlights-Ordner zuverlässig nach Uhrzeit sortieren zu können, wollen wir die Bilder in diesem Ordner so umbenennen, dass die Dateinamen mit dem Datum und der Uhrzeit anfangen, zu der das Foto aufgenommen wurde.
+                Damit das funktioniert, muss beim Exportieren aus deinem Bildbearbeitungsprogramm das EXIF-Feld "DateTimeOriginal" mit-exportiert werden.
+                </div>
+        </div>
+        <div id="results-resolution">
+            <div class="results-title">Auflösung</div>
+            <div class="results-validity">Valide: <span id="valid-resolution">❓</span></div>
+            <div class="results-importance">Wie finden wir das: <span class="importance">🤷</span></div>
+            <div class="results-description">
+                Unsere FFF-Nextcloud-Instanz scheint so konfiguriert zu sein, dass Fotos im Browser und in der App keine Vorschau mehr bekommen, wenn die Höhe oder Breite in Pixeln einen bestimmten Wert überschreitet.
+                Dieser Wert scheint aktuell bei 8192&nbsp;px (2<sup>13</sup>&nbsp;px) zu liegen.
+            </div>
+        </div>
+        <div id="results-filesize">
+            <div class="results-title">Dateigröße</div>
+            <div class="results-validity">Valide: <span id="valid-filesize">❓</span></div>
+            <div class="results-importance">Wie finden wir das: <span class="importance">🤷</span></div>
+            <div class="results-description">
+                Ähnlich wie für die Auflösung scheint die Cloud auch ein Limit in der Dateigröße zur Vorschaugenerierung zu haben.
+                Dieses Limit scheint aktuell bei um die 50&nbsp;MiB zu liegen.
+                In der Regel sollte die Dateigröße auch bei der maximalen Auflösung 15 oder 20&nbsp;MiB nicht übersteigen (Stand 2023…).
+                Passe dafür ggf. beim Exportieren das JPEG-Kompressionslevel an – alles über 90&nbsp;% sollte ok sein.
+            </div>
+        </div>
+        <div id="results-license">
+            <div class="results-title">Lizenz im Dateinamen</div>
+            <div class="results-validity">Valide: <span id="valid-license">❓</span></div>
+            <div class="results-importance">Wie finden wir das: <span class="importance">Wichtig / kommt drauf an</span></div>
+            <div class="results-description">
+                Wenn im Dateinamen kein Lizenzkürzel steht (<span class="known-licenses"></span>), dafür aber dein Name, gehen wir davon aus, dass du namentlich genannt werden möchtest (äquivalent zu "BY").
+                Falls weder Lizenzkürzel noch dein Name im Dateinamen stehen, können die Bilder im Highlights-Ordner nicht mehr ohne Weiteres zugeordnet werden, was Namensnennungen erschwert.
+            </div>
+        </div>
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/exifreader"></script>

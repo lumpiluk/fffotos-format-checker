@@ -1,9 +1,66 @@
+body {
+  font-family: Jost;
+  padding: .5em;
+}
+
+section {
+  max-width: 40em;
+  margin: auto;
+}
+
+h1 {
+  margin-top: 0;
+}
+
 #drop_zone {
-  border: 5px solid blue;
   width: 20em;
-  height: 5em;
+  margin: auto;
+  padding: 0em 1em; /* bottom/top left/right */
+  box-shadow: 0 .2em .6em 0em rgba(0, 0, 0, 0.4) inset; /* h, v, blur, spread, color */
+  border: 1pt solid #505050;
+  border-radius: .25em;
 }
 
 #drop_zone.over {
-    background: #a0d0ff;
+  background: #a0d0ff;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.file_button {
+  text-decoration: underline;
+}
+
+.file_button:hover {
+  color: #2070ff;
+  cursor: pointer;
+}
+
+#sec-results>div {
+  margin: 1em 0;
+  padding: .5em;
+  border: 1px solid #505050;
+}
+
+#sec-results .results-title {
+  font-weight: 550;
+}
+
+#sec-results .results-validity>span {
+  color: #757575;
+}
+
+.valid, .invalid {
+  margin-right: 1em;
+}
+
+#sec-results .results-importance .importance {
+  font-weight: 450;
+}
+
+#sec-results .results-description {
+  margin-top: .5em;
+  color: #505050;
 }

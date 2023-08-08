@@ -10,11 +10,11 @@ const KNOWN_LICENSE_TAGS = [
 ];
 
 function htmlInvalid(details) {
-    return `<span class="invalid">X</span>` + (details !== `` ? `<span class="details">${details}</span>` : ``);
+    return `<span class="invalid">❌</span>` + (details !== `` ? `<span class="details">${details}</span>` : ``);
 }
 
 function htmlValid(details) {
-    return `<span class="valid">✓</span>` + (details !== `` ? `<span class="details">${details}</span>` : ``);
+    return `<span class="valid">✅</span>` + (details !== `` ? `<span class="details">${details}</span>` : ``);
 }
 
 window.addEventListener("load", (event) => {
@@ -34,13 +34,15 @@ window.addEventListener("load", (event) => {
 async function checkPhoto(file) {
     console.log(`filename = ${file.name}`);
 
+    if (!checkMimetype(file)) {
+        return;
+    }
+    checkFilename(file);
+    checkFilesize(file);
     try {
         const tags = await ExifReader.load(file);
         console.log(tags);
-        checkDateTimeOriginal(file, tags);
-        checkMimetype(file);
-        checkFilename(file);
-        checkFilesize(file);
+        checkDateTimeOriginal(tags);
         checkResolution(tags);
     } catch(e) {
         console.error(e);
@@ -48,7 +50,7 @@ async function checkPhoto(file) {
 }
 
 function checkFilename(file) {
-    let elem_valid_license = document.querySelector("#results-license>td:nth-child(2)");
+    let elem_valid_license = document.querySelector("#valid-license");
     let re_license = RegExp(`[-_\s]+(?<license_tag>${KNOWN_LICENSE_TAGS.join('|')})[-_\s]+`);
     if ((match = re_license.exec(file.name))) {
         elem_valid_license.innerHTML = htmlValid(`"${match.groups['license_tag']}"`);
@@ -62,7 +64,7 @@ function bytesToMiB(size) {
 }
 
 function checkFilesize(file) {
-    let elem_valid = document.querySelector("#results-filesize>td:nth-child(2)");
+    let elem_valid = document.querySelector("#valid-filesize");
     let size_in_mebibytes = bytesToMiB(file.size);
     if (size_in_mebibytes < 50) {
         elem_valid.innerHTML = htmlValid(`${size_in_mebibytes.toFixed(2)}&nbsp;MiB`);
@@ -72,7 +74,7 @@ function checkFilesize(file) {
 }
 
 function checkResolution(exif_tags) {
-    let elem_valid = document.querySelector("#results-resolution>td:nth-child(2)");
+    let elem_valid = document.querySelector("#valid-resolution");
     const MAX_RESOLUTION = 8192;
     if (!("Image Height" in exif_tags && "Image Width" in exif_tags)) {
         elem_valid.innerHtml = htmlInvalid(`EXIF-Metadaten enthalten keine Angabe zur Auflösung`);
@@ -87,8 +89,8 @@ function checkResolution(exif_tags) {
     }
 }
 
-function checkDateTimeOriginal(file, exif_tags) {
-    let elem_valid = document.querySelector("#results-datetimeoriginal>td:nth-child(2)");
+function checkDateTimeOriginal(exif_tags) {
+    let elem_valid = document.querySelector("#valid-datetimeoriginal");
     if ('DateTimeOriginal' in exif_tags) {
         elem_valid.innerHTML = htmlValid(`"${exif_tags['DateTimeOriginal'].description}"`);
     } else {
@@ -97,12 +99,13 @@ function checkDateTimeOriginal(file, exif_tags) {
 }
 
 function checkMimetype(file) {
-    let elem_valid = document.querySelector("#results-mimetype>td:nth-child(2)");
+    let elem_valid = document.querySelector("#valid-mimetype");
     if (file.type === `image/jpeg`) {
         elem_valid.innerHTML = htmlValid(``);
-    } else {
-        elem_valid.innerHTML = htmlInvalid(file.type);
+        return true;
     }
+    elem_valid.innerHTML = htmlInvalid(file.type);
+    return false;
 }
 
 function fileButtonChangeHandler() {
