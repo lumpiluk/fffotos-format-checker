@@ -1,4 +1,5 @@
 let drop_zone = null;
+let drop_zone_over_counter = 0;
 let file_button = null;
 
 const KNOWN_LICENSE_TAGS = [
@@ -25,11 +26,10 @@ window.addEventListener("load", (event) => {
     drop_zone.addEventListener("dragover", dragOverHandler);
     drop_zone.addEventListener("dragenter", dragEnterHandler);
     drop_zone.addEventListener("dragleave", dragLeaveHandler);
-    drop_zone.addEventListener("dragend", dragEndHandler);
     file_button.addEventListener("change", fileButtonChangeHandler);
     document.querySelectorAll(".known-licenses").forEach((item) => {
         item.innerHTML = KNOWN_LICENSE_TAGS
-            .map(tag => {return `"${tag}"`})
+            .map(tag => {return `"${tag}"`;})
             .join(", ");
     });
 });
@@ -43,12 +43,12 @@ async function checkPhoto(file) {
     let tags = [];
     try {
         tags = await ExifReader.load(file);
+        console.log(tags);
+        checkDateTimeOriginal(tags);
+        checkResolution(tags);
     } catch(e) {
         console.error(e);
     }
-    console.log(tags);
-    checkDateTimeOriginal(tags);
-    checkResolution(tags);
 }
 
 function checkFilename(file) {
@@ -120,6 +120,7 @@ function dropHandler(ev) {
     // Prevent default behavior (Prevent file from being opened)
     ev.preventDefault();
     drop_zone.classList.remove('over');
+    drop_zone_over_counter = 0;
 
     if (ev.dataTransfer.items) {
         // Use DataTransferItemList interface to access the file(s)
@@ -148,12 +149,12 @@ function dragOverHandler(ev) {
 
 function dragEnterHandler(ev) {
     drop_zone.classList.add('over');
-}
-
-function dragEndHandler(ev) {
-    drop_zone.classList.remove('over');
+    drop_zone_over_counter++;
 }
 
 function dragLeaveHandler(ev) {
-    drop_zone.classList.remove('over');
+    drop_zone_over_counter--;
+    if (drop_zone_over_counter === 0) {
+        drop_zone.classList.remove('over');
+    }
 }

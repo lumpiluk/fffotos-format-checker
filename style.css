@@ -1,7 +1,40 @@
+:root {
+  --main-bg-color: white;
+  --main-color: black;
+  --drop-zone-border: 1pt solid #505050;
+  --drop-zone-box-shadow: 0 .2em .6em 0em rgba(0, 0, 0, 0.4) inset; /* h, v, blur, spread, color */
+  --drop-zone-over-bg: #a0d0ff;
+  --content-width: 40em;
+  --file-button-hover-color: #2070ff;
+  --code-bg: #d5d5d5;
+  --result-border: 1pt solid #eaeaea;
+  --result-box-shadow: 0 .1em .1em 0 rgba(0, 0, 0, 0.2); /* h, v, blur, spread, color */
+  --result-validity-color: #757575;
+  --result-description-color: #505050;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --main-bg-color: #1c1c1c;
+    --main-color: #f0f0f0;
+    --drop-zone-border: 1pt solid #606060;
+    --drop-zone-box-shadow: 0 .2em .6em 0em #7080a0 inset; /* h, v, blur, spread, color */
+    --drop-zone-over-bg: #a0d0ff;
+    --file-button-hover-color: #2070ff;
+    --code-bg: #505050;
+    --result-border: 1pt solid #404040;
+    --result-box-shadow: 0 .1em .1em 0 #404050; /* h, v, blur, spread, color */
+    --result-validity-color: #b0b0b0;
+    --result-description-color: #a0a0a0;
+  }
+}
+
 body {
   font-family: Jost;
+  color: var(--main-color);
   padding: 1em;
   margin: 0;
+  background: var(--main-bg-color);
 }
 
 #js-check {
@@ -10,7 +43,7 @@ body {
 }
 
 section {
-  max-width: 40em;
+  max-width: var(--content-width);
   margin: auto;
 }
 
@@ -21,13 +54,13 @@ h1 {
 #drop_zone {
   margin: auto;
   padding: 0em 1em; /* bottom/top left/right */
-  box-shadow: 0 .2em .6em 0em rgba(0, 0, 0, 0.4) inset; /* h, v, blur, spread, color */
-  border: 1pt solid #505050;
+  box-shadow: var(--drop-zone-box-shadow);
+  border: var(--drop-zone-border);
   border-radius: .25em;
 }
 
 #drop_zone.over {
-  background: #a0d0ff;
+  background: var(--drop-zone-over-bg);
 }
 
 input[type="file"] {
@@ -39,20 +72,22 @@ input[type="file"] {
 }
 
 .file_button:hover {
-  color: #2070ff;
+  color: var(--file-button-hover-color);
   cursor: pointer;
 }
 
 #selected-file code {
   display: block;
   padding: .3em;
-  background: #d5d5d5;
+  background: var(--code-bg);
 }
 
 #sec-results>div {
   margin: 1em 0;
   padding: .5em;
-  border: 1px solid #505050;
+  border: var(--result-border);
+  border-radius: .2em;
+  box-shadow: var(--result-box-shadow);
 }
 
 #sec-results .results-title {
@@ -60,7 +95,7 @@ input[type="file"] {
 }
 
 #sec-results .results-validity>span {
-  color: #757575;
+  color: var(--result-validity-color);
 }
 
 .valid, .invalid {
@@ -73,5 +108,5 @@ input[type="file"] {
 
 #sec-results .results-description {
   margin-top: .5em;
-  color: #505050;
+  color: var(--result-description-color);
 }
