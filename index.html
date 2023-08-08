@@ -22,71 +22,57 @@
             Mit diesem Tool wollen wir sichergehen, dass diese Eigenschaften im Highlights-Ordner erfüllt sind, ohne dass die FFFotoredaktion allzu viele Dateien von Hand umbenennen muss.
         </p>
     <section>
-    <div
-        id="drop_zone"
-        ondrop="dropHandler(event);"
-        ondragover="dragOverHandler(event);"
-        ondragenter="dragEnterHandler(event);"
-        ondragleave="dragLeaveHandler(event);"
-        ondragend="dragEndHandler(event);"
-    >
-        <p>Drag one or more files to this <i>drop zone</i>.</p>
+    <div id="drop_zone">
+        <p>
+            <label for="file_button">Ziehe ein Foto in dieses Feld oder nutze diesen Knopf:</label>
+            <input type="file" id="file_button" name="file_button" accept="image/jpeg" />
+        </p>
     </div>
+    <section>
+        <table id="results-table">
+            <tr>
+                <th></th>
+                <th>Valide?</th>
+                <th>Wie finden wir das?</th>
+                <th>Erläuterungen</th>
+            </tr>
+            <tr id="results-datetimeoriginal">
+                <td>EXIF Metadaten: "DateTimeOriginal"</td>
+                <td>?</td>
+                <td>Wichtig</td>
+                <td>
+                    Um Bilder im Highlights-Ordner zuverlässig nach Uhrzeit sortieren zu können, wollen wir die Bilder in diesem Ordner so umbenennen, dass die Dateinamen mit dem Datum und der Uhrzeit anfangen, zu der das Foto aufgenommen wurde.
+                    Damit das funktioniert, muss beim Exportieren aus deinem Bildbearbeitungsprogramm das EXIF-Feld "DateTimeOriginal" mit-exportiert werden.
+                </td>
+            </tr>
+            <tr id="results-mimetype">
+                <td>JPEG</td>
+                <td>?</td>
+                <td>Relativ wichtig</td>
+                <td>Erfahrungsgemäß können alle mit JPEGs umgehen. Nextcloud unterstützt zwar auch Fotos im WEBP-Format, aber z.B. nicht das proprietäre HEIC, was manche Kameras (und iPhones?) schreiben. PNGs würden zu groß werden.</td>
+            </tr>
+            <tr id="results-resolution">
+                <td>Auflösung</td>
+                <td>?</td>
+                <td>?</td>
+                <td>Unsere FFF-Nextcloud-Instanz scheint so konfiguriert zu sein, dass Fotos im Browser und in der App keine Vorschau mehr bekommen, wenn die Höhe oder Breite in Pixeln einen bestimmten Wert überschreitet. Dieser Wert scheint aktuell bei 8192&nbsp;px (2<sup>13</sup>&nbsp;px) zu liegen.</td>
+            </tr>
+            <tr id="results-filesize">
+                <td>Dateigröße</td>
+                <td>?</td>
+                <td>?</td>
+                <td>Ähnlich wie für die Auflösung scheint die Cloud auch ein Limit in der Dateigröße zur Vorschaugenerierung zu haben. Dieses Limit scheint aktuell bei um die 50&nbsp;MiB zu liegen. In der Regel sollte die Dateigröße auch bei der maximalen Auflösung 15 oder 20&nbsp;MiB nicht übersteigen (Stand 2023…). Passe dafür ggf. beim Exportieren das JPEG-Kompressionslevel an – alles über 90&nbsp;% sollte ok sein.</td>
+            </tr>
+            <tr id="results-license">
+                <td>Lizenz im Dateinamen</td>
+                <td>?</td>
+                <td>Wichtig / kommt drauf an</td>
+                <td>Wenn im Dateinamen kein Lizenzkürzel steht (<span class="known-licenses"></span>), dafür aber dein Name, gehen wir davon aus, dass du namentlich genannt werden möchtest (äquivalent zu "BY").</td>
+            </tr>
+        </table>
+    </section>
 
     <script src="https://cdn.jsdelivr.net/npm/exifreader"></script>
-    <script>
-        let drop_zone = document.querySelector("#drop_zone");
-
-        function checkPhoto(file) {
-            console.log(`filename = ${file.name}`);
-
-            ExifReader.load(file).then(tags => {
-                console.log(tags);
-                console.log(tags['DateTimeOriginal'].description);
-            });
-        }
-
-        function dropHandler(ev) {
-            // Prevent default behavior (Prevent file from being opened)
-            ev.preventDefault();
-            drop_zone.classList.remove('over');
-
-            if (ev.dataTransfer.items) {
-                // Use DataTransferItemList interface to access the file(s)
-                [...ev.dataTransfer.items].forEach((item, i) => {
-                    console.log("DataTransferItemList");
-                    // If dropped items aren't files, reject them
-                    if (item.kind === "file") {
-                        const file = item.getAsFile();
-                        checkPhoto(file);
-                    }
-                });
-            } else {
-                // Use DataTransfer interface to access the file(s)
-                [...ev.dataTransfer.files].forEach((file, i) => {
-                    console.log("DataTransfer");
-                    checkPhoto(file);
-                });
-            }
-        }
-
-        function dragOverHandler(ev) {
-            // Prevent default behavior (Prevent file from being opened)
-            ev.preventDefault();
-            return false;
-        }
-
-        function dragEnterHandler(ev) {
-            drop_zone.classList.add('over');
-        }
-
-        function dragEndHandler(ev) {
-            drop_zone.classList.remove('over');
-        }
-
-        function dragLeaveHandler(ev) {
-            drop_zone.classList.remove('over');
-        }
-    </script>
+    <script src="check-photo.js"></script>
 </body>
 </html>
