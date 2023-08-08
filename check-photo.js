@@ -94,7 +94,7 @@ function checkResolution(exif_tags) {
 function checkDateTimeOriginal(exif_tags) {
     let elem_valid = document.querySelector("#valid-datetimeoriginal");
     if ('DateTimeOriginal' in exif_tags) {
-        elem_valid.innerHTML = htmlValid(`"${exif_tags['DateTimeOriginal'].description}"`);
+        elem_valid.innerHTML = htmlValid(`"${exif_tags['DateTimeOriginal'].description}" ⬅️ <b>vorausgesetzt, dass dieser Zeitpunkt korrekt ist!</b>`);
     } else {
         elem_valid.innerHTML = htmlInvalid(``);
     }
