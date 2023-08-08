@@ -1,6 +1,7 @@
 body {
   font-family: Jost;
-  padding: .5em;
+  padding: 1em;
+  margin: 0;
 }
 
 #js-check {
@@ -18,7 +19,6 @@ h1 {
 }
 
 #drop_zone {
-  width: 20em;
   margin: auto;
   padding: 0em 1em; /* bottom/top left/right */
   box-shadow: 0 .2em .6em 0em rgba(0, 0, 0, 0.4) inset; /* h, v, blur, spread, color */
