@@ -3,6 +3,11 @@ body {
   padding: .5em;
 }
 
+#js-check {
+  color: red;
+  font-weight: bold;
+}
+
 section {
   max-width: 40em;
   margin: auto;

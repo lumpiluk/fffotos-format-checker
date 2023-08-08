@@ -18,6 +18,7 @@ function htmlValid(details) {
 }
 
 window.addEventListener("load", (event) => {
+    document.querySelector("#js-check").remove();
     drop_zone = document.querySelector("#drop_zone");
     file_button = file_button = document.querySelector("#file_button");
     drop_zone.addEventListener("drop", dropHandler);
