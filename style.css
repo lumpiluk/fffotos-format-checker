@@ -43,6 +43,12 @@ input[type="file"] {
   cursor: pointer;
 }
 
+#selected-file code {
+  display: block;
+  padding: .3em;
+  background: #d5d5d5;
+}
+
 #sec-results>div {
   margin: 1em 0;
   padding: .5em;

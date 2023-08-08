@@ -35,7 +35,7 @@ window.addEventListener("load", (event) => {
 });
 
 async function checkPhoto(file) {
-    console.log(`filename = ${file.name}`);
+    document.querySelector("#selected-file").innerHTML = `Ausgewählte Datei: <code>${file.name}</code>`;
 
     if (!checkMimetype(file)) {
         return;
