@@ -1,5 +1,5 @@
-let drop_zone = document.querySelector("#drop_zone");
-let file_button = document.querySelector("#file_button");
+let drop_zone = null;
+let file_button = null;
 
 const KNOWN_LICENSE_TAGS = [
     'OPT',
@@ -18,6 +18,8 @@ function htmlValid(details) {
 }
 
 window.addEventListener("load", (event) => {
+    drop_zone = document.querySelector("#drop_zone");
+    file_button = file_button = document.querySelector("#file_button");
     drop_zone.addEventListener("drop", dropHandler);
     drop_zone.addEventListener("dragover", dragOverHandler);
     drop_zone.addEventListener("dragenter", dragEnterHandler);
