@@ -37,19 +37,18 @@ window.addEventListener("load", (event) => {
 async function checkPhoto(file) {
     document.querySelector("#selected-file").innerHTML = `Ausgewählte Datei: <code>${file.name}</code>`;
 
-    if (!checkMimetype(file)) {
-        return;
-    }
+    !checkMimetype(file)
     checkFilename(file);
     checkFilesize(file);
+    let tags = [];
     try {
-        const tags = await ExifReader.load(file);
-        console.log(tags);
-        checkDateTimeOriginal(tags);
-        checkResolution(tags);
+        tags = await ExifReader.load(file);
     } catch(e) {
         console.error(e);
     }
+    console.log(tags);
+    checkDateTimeOriginal(tags);
+    checkResolution(tags);
 }
 
 function checkFilename(file) {
@@ -80,7 +79,7 @@ function checkResolution(exif_tags) {
     let elem_valid = document.querySelector("#valid-resolution");
     const MAX_RESOLUTION = 8192;
     if (!("Image Height" in exif_tags && "Image Width" in exif_tags)) {
-        elem_valid.innerHtml = htmlInvalid(`EXIF-Metadaten enthalten keine Angabe zur Auflösung`);
+        elem_valid.innerHTML = htmlInvalid(`EXIF-Metadaten enthalten keine Angabe zur Auflösung`);
         return;
     }
     const res = `${exif_tags['Image Width'].value}x${exif_tags['Image Height'].value}`;
